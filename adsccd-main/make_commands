@@ -1,0 +1,15 @@
+
+==================================================
+===SOCKETS===
+gcc -g -o <out_file> <in_file.c>
+
+
+=================================================
+===PROTOC===
+protoc-c --c_out=. <in_file.proto>
+protoc --python_out=. <in_file.proto>
+gcc -g -o <out_file> <in_file.c> <proto_file.c> -lprotobuf-c
+ex: gcc -g -o protobuf_c_survey_server protobuf_c_survey_server.c survey.pb-c.c -lprotobuf-c
+
+==================================================
+gcc -o <output_file> -D_GNU_SOURCE <input_file.c> -lcurl -ljansson
