@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+
+import socket
+import random
+import struct
+
+from socket_conf import server_address, server_port, one_uint_struct_format, one_uint_nb_bytes
+
+# connection to the server
+connected_socket = socket.create_connection((server_address, server_port))
+
+# send nb ticket
+nb_ticket = 2
+connected_socket.sendall(struct.pack(one_uint_struct_format, nb_ticket))
+
+
+
+#receive prix global from the server
+buf = connected_socket.recv(one_uint_nb_bytes)
+if len(buf) != one_uint_nb_bytes:
+    raise IOError(f'Client partial read: {len(buf)} instead of {one_uint_nb_bytes}')
+
+(prix_global,) = struct.unpack(one_uint_struct_format, buf)
+
+# send prix global
+connected_socket.sendall(struct.pack(one_uint_struct_format, prix_global))
+
+# receive num réservation from server
+buf = connected_socket.recv(one_uint_nb_bytes)
+if len(buf) != one_uint_nb_bytes:
+    raise IOError(f'Client partial read: {len(buf)} instead of {one_uint_nb_bytes}')
+
+(num_reserv,) = struct.unpack(one_uint_struct_format, buf)
+
+# close connection
+connected_socket.shutdown(socket.SHUT_RDWR)
+connected_socket.close()
+
+# print result
+print(f'{prix_global}$')
+print(f'{num_reserv}')
